@@ -48,31 +48,20 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          login(this.form.username, this.form.password).then(respone => {
-            const resp = respone.data;
-            if (resp.flag) {
-              getUserInfo(resp.data.token).then(response => {
-                const respUser = response.data;
-                if (respUser.flag) {
-                  localStorage.setItem(
-                    "msm-user",
-                    JSON.stringify(respUser.data)
-                  );
-                  localStorage.setItem("msm-token", resp.data.token);
-                  this.$router.push("/");
-                }
-              });
-            } else {
+          this.$store.dispatch('Login',this.form).then(response=>{
+            if(response.flag){
+              this.$router.push('/')
+            }else{
               this.$message({
-                message: resp.message,
-                type: "warning"
-              });
+                message:response.message,
+                type:'wraning'
+              })
             }
-          });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
+          })
+          
+         }else{
+           return false
+         }
       });
     }
   }

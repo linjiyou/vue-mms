@@ -64,7 +64,8 @@ export default {
          }
     }
     return {
-      user: JSON.parse(localStorage.getItem("msm-user")),
+      // user: JSON.parse(localStorage.getItem("msm-user")),
+      user:this.$store.state.user.user,
       ruleForm: {
         pass:'',
         newPass:'',
@@ -98,21 +99,31 @@ export default {
       }
     },
     handleLogout() {
-      logout(localStorage.getItem(localStorage.getItem("msm-token"))).then(
-        respone => {
-          const resp = respone.data;
-          if (resp.flag) {
-            localStorage.removeItem("msm-token");
-            localStorage.removeItem("msm-user");
-            this.$router.push("/login");
-          } else {
-            this.$message({
+      this.$store.dispatch('Logout').then(response=>{
+        if(response.flag){
+          this.$router.push('/login')
+        }else{
+           this.$message({
               message: "退出失败，请网络好的时候尝试",
               type: "warning"
             });
-          }
         }
-      );
+      })
+      // logout(localStorage.getItem(localStorage.getItem("msm-token"))).then(
+      //   respone => {
+      //     const resp = respone.data;
+      //     if (resp.flag) {
+      //       localStorage.removeItem("msm-token");
+      //       localStorage.removeItem("msm-user");
+      //       this.$router.push("/login");
+      //     } else {
+      //       this.$message({
+      //         message: "退出失败，请网络好的时候尝试",
+      //         type: "warning"
+      //       });
+      //     }
+      //   }
+      // );
     },
     handlePwd() {
       this.dialogUserVisible = true;
